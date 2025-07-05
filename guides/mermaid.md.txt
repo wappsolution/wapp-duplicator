@@ -1,0 +1,15 @@
+flowchart TD
+  A["Inicio: usuario aciona duplicacao"] --> B["main inicia execucao"]
+  B --> C["login se conecta ao ambiente fonte via Selenium"]
+  C --> D["duplicador aciona botao duplicar ambiente"]
+  D --> E["loop aguardando status pronto ou timeout"]
+  E --> F["obtem link do ambiente clonado"]
+  F --> G["token_generator acessa novo ambiente"]
+  G --> H["solicita geracao de api token"]
+  H --> I["extrai e salva token no banco"]
+  I --> J["atualiza status para COMPLETED"]
+  J --> K["fim com sucesso"]
+
+  E --> L["erro ou timeout detectado"]
+  L --> M["log de erro e status FAILED"]
+  M --> N["fim com erro"]

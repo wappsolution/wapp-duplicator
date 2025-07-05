@@ -1,0 +1,49 @@
+// schema.prisma
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model DuplicationRequest {
+  id              Int       @id @default(autoincrement())
+  sourceEnv       String
+  targetEnv       String?
+  status          Status    @default(PENDING)
+  requestTime     DateTime  @default(now())
+  startTime       DateTime?
+  completionTime  DateTime?
+  apiToken        String?
+  errorMessage    String?
+  logs            String?   // Path para logs ou JSON simples
+  duplicatesCount Int?      // Qtde de duplicatas processadas, se aplicável
+
+  // Relacionamentos
+  statusUpdates   StatusUpdate[]
+
+  @@index([status])
+  @@index([requestTime])
+}
+
+model StatusUpdate {
+  id               Int       @id @default(autoincrement())
+  duplicationId    Int
+  timestamp        DateTime  @default(now())
+  status           Status
+  message          String?
+
+  duplication      DuplicationRequest @relation(fields: [duplicationId], references: [id])
+
+  @@index([duplicationId])
+  @@index([timestamp])
+}
+
+enum Status {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}

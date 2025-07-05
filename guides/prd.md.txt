@@ -1,0 +1,130 @@
+🧩 Product Requirements Document (PRD)
+1. Visão Geral
+Objetivo:
+Automatizar o processo de duplicação de ambientes no uMov.me Center, usando script em Python com Selenium, eliminando tarefas manuais repetitivas.
+
+Problema que resolve:
+Atualmente, realizar a duplicação exige vários cliques e aguardar manualmente (~15 min), gerando erro humano, tempo improdutivo e dispersão de foco.
+
+2. Stakeholders
+Equipe de TI/DevOps: Usuários do script supondo economia de tempo.
+
+Equipe de Integração: Receberá ambientes alinhados com segurança e qualidade.
+
+Gerência/Operações: Vai acompanhar ganho de produtividade e redução de erros operacionais.
+
+3. Escopo
+Inclusões:
+
+Login automatizado no ambiente fonte.
+
+Acesso e execução do fluxo "Duplicar Ambiente".
+
+Espera pelo status “Pronto” (~15 minutos).
+
+Acesso ao ambiente clonado.
+
+Geração e captura da chave de API.
+
+Save do token em arquivo .env ou settings.json.
+
+Exclusões:
+
+Importação ou migração de dados via API.
+
+Validação do ambiente clonado além do token.
+
+Notificações por e‑mail ou Slack.
+
+4. Requisitos
+Funcionais
+Login automático no Center com credenciais seguras.
+
+Navegação até menu “Duplicar Ambiente”.
+
+Iniciar duplicação e capturar feedback visual.
+
+Aguardar conclusão, com timeout configurável.
+
+Obter link do novo ambiente.
+
+Gerar token API no ambiente clonado.
+
+Persistir token localmente.
+
+Não-funcionais
+Modularidade: main.py + módulos com max. 100 linhas.
+
+Resiliência: Tratamento de erros, retries, logs e screenshots em falhas.
+
+Qualidade: Coverage via pytest, Page Object Model.
+
+Configurável via .env ou settings.json.
+
+5. Fluxo do Usuário
+Executa python main.py com ambiente fonte e destino.
+
+O script faz login e acessa duplicação.
+
+Inicia ação e espera até "Pronto".
+
+Acessa novo ambiente e gera token.
+
+Salva token e exibe no console.
+
+Gera logs e, se erro, salva capturas e aborta.
+
+6. Critérios de Sucesso
+✅ Duplicação automática é concluída em >95% dos casos.
+
+✅ Token gerado e armazenado adequadamente.
+
+✅ Testes de smoke aprovados.
+
+⏱️ Tempo médio de execução ≤ 20 min.
+
+📦 Modularidade e cobertura ≥ 80%.
+
+7. Requisitos Técnicos & Ferramentas
+Linguagem: Python 3.10+
+
+Automação Web: Selenium + ChromeDriver
+
+Testes: pytest
+
+Configuração: python-dotenv ou JSON config
+
+Logging: logging ou structlog
+
+Gerenciamento: Git + GitHub
+
+8. Planejamento de Sprint
+Sprint 1 (1 semana):
+
+Setup do projeto, login e modularização.
+
+Sprint 2 (1 semana):
+
+Automação de duplicação + espera, retorno de link.
+
+Sprint 3 (1 semana):
+
+Geração e armazenamento de token, testes, logging.
+
+Sprint 4 (1 semana):
+
+Testes coverage, tratamento de erros, documentação final.
+
+9. Dependências e Restrições
+Manter ChromeDriver e versão do Chrome atualizados.
+
+Autorização da uMov.me para acesso via script.
+
+Layout da UI estável (eventuais mudanças exigirão manutenção).
+
+10. Riscos & Mitigações
+Risco	Mitigação
+Mudança no layout da página	Page Object Model + testes UI
+Timeout maior que previsto	Parametrizar timeout e alerta
+Credenciais expostas	Armazenar em .env, não em código
+Erros na duplicação	Logs e screenshots para análise
